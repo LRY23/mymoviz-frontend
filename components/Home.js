@@ -12,7 +12,7 @@ function Home() {
 
   // Movie list
   useEffect(() => {
-      fetch('http://localhost:3000/movies')
+      fetch('http://mymoviz-backend-eight-gamma.vercel.app')
         .then(response => response.json())
         .then(data => {
           const myData = data.movies.map(movies => {
