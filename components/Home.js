@@ -36,7 +36,7 @@ function Home() {
 
   // Movies list
   useEffect(() => {
-    fetch('http://mymoviz-backend-mu-eight.vercel.app/movies')
+    fetch('http://mymoviz-backend-mu-eight.vercel.app')
       .then(response => response.json())
       .then(data => {
         const formatedData = data.movies.map(movie => {
