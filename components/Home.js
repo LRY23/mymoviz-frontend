@@ -10,8 +10,8 @@ function Home() {
   const [likedMovies, setLikedMovies] = useState([]);
   const [moviesData, setMoviesData] = useState([]);
 
-   // Liked movies (inverse data flow)
-   const updateLikedMovies = (movieTitle) => {
+  // Liked movies (inverse data flow)
+  const updateLikedMovies = (movieTitle) => {
     if (likedMovies.find(movie => movie === movieTitle)) {
       setLikedMovies(likedMovies.filter(movie => movie !== movieTitle));
     } else {
@@ -19,34 +19,6 @@ function Home() {
     }
   };
 
-  // Movie list
-  useEffect(() => {
-    //
-    fetch('http://mymoviz-backend-eight-gamma.vercel.app/movies')
-      .then(response => response.json())
-      .then(data => {
-        const formatedData = data.movies.map((movie) => {
-          const poster = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
-  
-          let overview = movie.overview;
-          if (overview.length > 250){
-            overview = overview.substring(0, 250);
-          }
-          return { title: movie.title, poster, voteAverage: movie.vote_average, voteCount: movie.vote_count, overview };
-        });
-        setMoviesData(formatedData);
-      });
-  }, []);
-  
-
-
-  const movies = moviesData.map((data, i) => {
-    const isLiked = likedMovies.some(movie => movie === data.title);
-    return <Movie key={i} isLiked={isLiked} title={data.title} overview={data.overview} poster={data.poster} voteAverage={data.voteAverage} voteCount={data.voteCount} updateLikedMovies={updateLikedMovies}  />;
-  });
-
-
- 
   const likedMoviesPopover = likedMovies.map((data, i) => {
     return (
       <div key={i} className={styles.likedMoviesContainer}>
@@ -56,12 +28,34 @@ function Home() {
     );
   });
 
-
   const popoverContent = (
     <div className={styles.popoverContent}>
       {likedMoviesPopover}
     </div>
   );
+
+  // Movies list
+  useEffect(() => {
+    fetch('http://localhost:3000/movies')
+      .then(response => response.json())
+      .then(data => {
+        const formatedData = data.movies.map(movie => {
+          const poster = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
+          let overview = movie.overview;
+          if (overview.length > 250) {
+            overview = overview.substring(0, 250) + '...';
+          }
+
+          return { title: movie.title, poster, voteAverage: movie.vote_average, voteCount: movie.vote_count, overview };
+        });
+        setMoviesData(formatedData);
+      });
+  }, []);
+
+  const movies = moviesData.map((data, i) => {
+    const isLiked = likedMovies.some(movie => movie === data.title);
+    return <Movie key={i} updateLikedMovies={updateLikedMovies} isLiked={isLiked} title={data.title} overview={data.overview} poster={data.poster} voteAverage={data.voteAverage} voteCount={data.voteCount} />;
+  });
 
   return (
     <div className={styles.main}>
