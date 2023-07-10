@@ -22,7 +22,7 @@ function Home() {
   // Movie list
   useEffect(() => {
     //
-    fetch('mymoviz-backend-eight-gamma.vercel.app/movies')
+    fetch('http://mymoviz-backend-eight-gamma.vercel.app/movies')
       .then(response => response.json())
       .then(data => {
         const formatedData = data.movies.map((movie) => {
